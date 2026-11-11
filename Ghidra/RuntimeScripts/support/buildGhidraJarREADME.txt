@@ -50,7 +50,7 @@ To see full headless analyzer usage enter the following without any additional a
 
 	java -Xmx1024M -jar ghidra.jar
 	
-*The above commands assume that a JDK 8 is installed on your system and is contained
+*The above commands assume that a JDK 25 or later is installed on your system and is contained
 within your execution path.  
 
 **The -Xmx1024M specifies the amount of memory java is allowed to use. The 1024 sets the max
