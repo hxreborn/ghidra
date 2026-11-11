@@ -21,6 +21,7 @@ import ghidra.program.model.address.Address;
 import ghidra.program.model.listing.Program;
 import ghidra.program.model.mem.Memory;
 import ghidra.program.model.mem.MemoryAccessException;
+import ghidra.program.model.mem.MemoryBlock;
 import ghidra.program.model.reloc.Relocation.Status;
 import ghidra.program.model.reloc.RelocationResult;
 
@@ -99,6 +100,8 @@ public class ARM_CoffRelocationHandler implements CoffRelocationHandler {
 
 	public static final short IMAGE_REL_ARM_PAIR = 0x0016;
 
+	private static final long IMMED16_MASK = 0x70ff040fL;
+
 	@Override
 	public boolean canRelocate(CoffFileHeader fileHeader) {
 		switch (fileHeader.getMachine()) {
@@ -122,24 +125,28 @@ public class ARM_CoffRelocationHandler implements CoffRelocationHandler {
 
 		int bytesToAdjust = mem.getInt(address);
 		Address symbolAddr = relocationContext.getSymbolAddress(relocation);
+		long symbolValue = getSymbolValue(mem, symbolAddr);
 		switch (relocation.getType()) {
 
 			case IMAGE_REL_ARM_ABSOLUTE:
 				return RelocationResult.SKIPPED;
 
 			case IMAGE_REL_ARM_ADDR32:
-				mem.setInt(address, (int) symbolAddr.getOffset());
+				mem.setInt(address, (int) symbolValue + bytesToAdjust);
 				break;
 
 			case IMAGE_REL_ARM_ADDR32NB:
-				mem.setInt(address, (int) symbolAddr.getOffset());
+				mem.setInt(address, (int) symbolValue + bytesToAdjust);
 				break;
 
 			case IMAGE_REL_THUMB_MOV32:
-				int symAddress = (int) symbolAddr.getOffset();
+				long longBytesToAdjust = mem.getLong(address);
+				int addend = getImmed16Value((int) longBytesToAdjust) |
+					(getImmed16Value((int) (longBytesToAdjust >> 32)) << 16);
+				int symAddress = (int) symbolValue + addend;
 				long highImmed16 = getImmed16(symAddress >> 16);
 				long lowImmed16 = getImmed16(symAddress & 0xffff);
-				long longBytesToAdjust = mem.getLong(address);
+				longBytesToAdjust &= ~((IMMED16_MASK << 32) | IMMED16_MASK);
 				longBytesToAdjust = longBytesToAdjust | (highImmed16 << 32) | lowImmed16;
 				byteLength = 8;
 				mem.setLong(address, longBytesToAdjust);
@@ -166,6 +173,22 @@ public class ARM_CoffRelocationHandler implements CoffRelocationHandler {
 			}
 		}
 		return new RelocationResult(Status.APPLIED, byteLength);
+	}
+
+	private long getSymbolValue(Memory mem, Address symbolAddr) {
+		MemoryBlock block = mem.getBlock(symbolAddr);
+		if (block != null && block.isExecute()) {
+			return symbolAddr.getOffset() | 1;
+		}
+		return symbolAddr.getOffset();
+	}
+
+	private int getImmed16Value(int instruction) {
+		int immed12_imm8 = (instruction >> 16) & 0xff;
+		int immed12_imm3 = (instruction >> 28) & 0x7;
+		int immed12_i = (instruction >> 10) & 1;
+		int sop003 = instruction & 0xf;
+		return (sop003 << 12) | (immed12_i << 11) | (immed12_imm3 << 8) | immed12_imm8;
 	}
 
 	private int getImmed16(int value) {
