@@ -647,7 +647,7 @@ public class CoffLoader extends AbstractLibrarySupportLoader {
 		}
 
 		CoffRelocationContext relocationContext =
-			new CoffRelocationContext(program, header, symbolsMap);
+			new CoffRelocationContext(program, header, symbolsMap, sectionsMap);
 		int failureCount = 0;
 
 		for (CoffSectionHeader section : header.getSections()) {
