@@ -64,7 +64,7 @@ public class AnalyzeHeadless implements GhidraLaunchable {
 		KEYSTORE("-keystore", true, "<KeystorePath>"),
 		CONNECT("-connect", false, "[<userID>]"),
 		PASSWORD("-p", false),
-		COMMIT("-commit", false, "[\"<comment>\"]]"),
+		COMMIT("-commit", false, "[\"<comment>\"]"),
 		OK_TO_DELETE("-okToDelete", false),
 		ALLOW_ALL_ACCESS("-allowAllAccess", false),
 		MAX_CPU("-max-cpu", true, "<max cpu cores to use>"),
