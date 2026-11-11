@@ -26,6 +26,7 @@ import ghidra.app.util.bin.*;
 import ghidra.app.util.bin.format.MemoryLoadable;
 import ghidra.program.model.address.Address;
 import ghidra.program.model.data.*;
+import ghidra.program.model.mem.Memory;
 import ghidra.util.Msg;
 import ghidra.util.StringUtilities;
 
@@ -326,7 +327,7 @@ public class ElfSectionHeader implements StructConverter, MemoryLoadable {
 					long offset = stringTableOffset + sh_name;
 					if (offset < reader.length()) {
 						name = reader.readUtf8String(stringTableOffset + sh_name);
-						if ("".equals(name)) {
+						if (!Memory.isValidMemoryBlockName(name)) {
 							name = null;
 						}
 					}
