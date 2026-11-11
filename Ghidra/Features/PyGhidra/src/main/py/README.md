@@ -163,6 +163,7 @@ def ghidra_script(
         path: Union[str, Path],
         project: "Project",
         program: "Program" = None,
+        script_args: List[str] = [],
         echo_stdout = True,
         echo_stderr = True
     ) -> Tuple[str, str]:
@@ -172,6 +173,7 @@ def ghidra_script(
     :param path: The GhidraScript's path.
     :param project: The Ghidra project to run the GhidraScript in.
     :param program: An optional Ghidra program that the GhidraScript will see as its "currentProgram".
+    :param script_args: An optional list of arguments to pass to the GhidraScript.
     :param echo_stdout: Whether or not to echo the GhidraScript's standard output.
     :param echo_stderr: Whether or not to echo the GhidraScript's standard error.
     :return: A 2 element tuple consisting of the GhidraScript's standard output and standard error.
