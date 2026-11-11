@@ -16,6 +16,7 @@
 package ghidra.app.util.bin.format.coff.relocation;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -34,6 +35,7 @@ public class CoffRelocationContext {
 	private final Program program;
 	private final CoffFileHeader header;
 	private final Map<CoffSymbol, Symbol> symbolsMap;
+	private final Map<CoffSectionHeader, Address> sectionsMap;
 
 	private final Map<String, Object> contextMap = new HashMap<>();
 	private CoffSectionHeader section;
@@ -44,12 +46,14 @@ public class CoffRelocationContext {
 	 * @param program program to which relocations are applied
 	 * @param header COFF file header
 	 * @param symbolsMap symbol lookup map
+	 * @param sectionsMap section start address lookup map
 	 */
 	public CoffRelocationContext(Program program, CoffFileHeader header,
-			Map<CoffSymbol, Symbol> symbolsMap) {
+			Map<CoffSymbol, Symbol> symbolsMap, Map<CoffSectionHeader, Address> sectionsMap) {
 		this.program = program;
 		this.header = header;
 		this.symbolsMap = symbolsMap;
+		this.sectionsMap = sectionsMap;
 	}
 
 	/**
@@ -111,6 +115,17 @@ public class CoffRelocationContext {
 	 * @throws RelocationException if symbol not found
 	 */
 	public Address getSymbolAddress(CoffRelocation relocation) throws RelocationException {
+		CoffSymbol coffSymbol = header.getSymbolAtIndex(relocation.getSymbolIndex());
+		if (coffSymbol != null && coffSymbol.isSection()) {
+			int sectionIndex = coffSymbol.getSectionNumber() - 1;
+			List<CoffSectionHeader> sections = header.getSections();
+			if (sectionIndex >= 0 && sectionIndex < sections.size()) {
+				Address sectionAddress = sectionsMap.get(sections.get(sectionIndex));
+				if (sectionAddress != null) {
+					return sectionAddress;
+				}
+			}
+		}
 		return getSymbol(relocation).getAddress();
 	}
 

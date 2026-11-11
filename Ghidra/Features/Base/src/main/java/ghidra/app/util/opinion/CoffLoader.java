@@ -647,7 +647,7 @@ public class CoffLoader extends AbstractLibrarySupportLoader {
 		}
 
 		CoffRelocationContext relocationContext =
-			new CoffRelocationContext(program, header, symbolsMap);
+			new CoffRelocationContext(program, header, symbolsMap, sectionsMap);
 		int failureCount = 0;
 
 		for (CoffSectionHeader section : header.getSections()) {
@@ -749,13 +749,20 @@ public class CoffLoader extends AbstractLibrarySupportLoader {
 
 				// The relocation symbol may be null when either not required by a relocation or
 				// not found with symbol index
-				Symbol symbol =
-					symbolsMap.get(header.getSymbolAtIndex(relocation.getSymbolIndex()));
+				CoffSymbol coffSymbol = header.getSymbolAtIndex(relocation.getSymbolIndex());
+				Symbol symbol = symbolsMap.get(coffSymbol);
+				String symbolName = "<null>";
+				if (symbol != null) {
+					symbolName = symbol.getName();
+				}
+				else if (status == Status.APPLIED && byteLength > 0 && coffSymbol != null &&
+					coffSymbol.isSection()) {
+					symbolName = coffSymbol.getName();
+				}
 
 				program.getRelocationTable()
 						.add(address, status, relocation.getType(),
-							new long[] { relocation.getSymbolIndex() }, byteLength,
-							symbol != null ? symbol.getName() : "<null>");
+							new long[] { relocation.getSymbolIndex() }, byteLength, symbolName);
 			}
 		}
 
