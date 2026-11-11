@@ -143,7 +143,7 @@ public class AARCH64_CoffRelocationHandler implements CoffRelocationHandler {
 				return RelocationResult.SKIPPED;
 
 			case IMAGE_REL_ARM64_ADDR32NB:
-				mem.setInt(address, (int) symbolAddr.getOffset());
+				mem.setInt(address, (int) symbolAddr.getOffset() + bytesToAdjust);
 				break;
 
 			case IMAGE_REL_ARM64_BRANCH26:
@@ -158,7 +158,9 @@ public class AARCH64_CoffRelocationHandler implements CoffRelocationHandler {
 
 			case IMAGE_REL_ARM64_PAGEBASE_REL21:
 				long base = address.getOffset() & ~0xfff;
-				long offset = symbolAddr.getOffset() - base;
+				int addend = ((bytesToAdjust >>> 29) & 0x3) | ((bytesToAdjust >>> 3) & 0x1ffffc);
+				addend = (addend << 11) >> 11;
+				long offset = symbolAddr.getOffset() + addend - base;
 				offset = offset >> 12;
 				int immlo = (int) offset & 0x3;
 				offset = offset >> 2;
@@ -170,7 +172,7 @@ public class AARCH64_CoffRelocationHandler implements CoffRelocationHandler {
 				break;
 
 			case IMAGE_REL_ARM64_PAGEOFFSET_12A:
-				offset = symbolAddr.getOffset() & 0xfff;
+				offset = (symbolAddr.getOffset() + ((bytesToAdjust >> 10) & 0xfff)) & 0xfff;
 				instMask = ~(0xfff << 10);
 				bytesToAdjust &= instMask;
 				bytesToAdjust = (int) (bytesToAdjust | (offset << 10));
@@ -179,8 +181,12 @@ public class AARCH64_CoffRelocationHandler implements CoffRelocationHandler {
 
 			case IMAGE_REL_ARM64_PAGEOFFSET_12L:
 				int size = bytesToAdjust >>> 30;
-				offset = symbolAddr.getOffset() & 0xfff;
-				offset >>= size;
+				if ((bytesToAdjust & 0x4800000) == 0x4800000) {
+					size += 4;
+				}
+				offset = (symbolAddr.getOffset() & 0xfff) >> size;
+				offset += (bytesToAdjust >> 10) & 0xfff;
+				offset &= 0xfff >> size;
 				instMask = ~(0xfff << 10);
 				bytesToAdjust &= instMask;
 				bytesToAdjust = (int) (bytesToAdjust | (offset << 10));
@@ -188,7 +194,7 @@ public class AARCH64_CoffRelocationHandler implements CoffRelocationHandler {
 				break;
 
 			case IMAGE_REL_ARM64_ADDR64:
-				mem.setLong(address, symbolAddr.getOffset());
+				mem.setLong(address, symbolAddr.getOffset() + mem.getLong(address));
 				byteLength = 8;
 				break;
 
