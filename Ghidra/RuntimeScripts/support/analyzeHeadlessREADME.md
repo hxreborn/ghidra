@@ -102,7 +102,7 @@ following table shows parameters that are specific to `project_location`:
 | -connect  |               |         X         |
 | -keystore |               |         X         |
 | -commit   |               |         X         |
-| -delete   |      X        |                   |
+| -deleteProject |      X        |                   |
 
 
 ### `<project_name>[/<folder_path>]`
