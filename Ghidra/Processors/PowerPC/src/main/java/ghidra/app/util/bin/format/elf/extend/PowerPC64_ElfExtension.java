@@ -613,7 +613,8 @@ public class PowerPC64_ElfExtension extends ElfExtension {
 		}
 
 		Address tocAddr = (Address) tocPtr.getValue();
-		if (tocAddr == null || tocAddr.getOffset() == 0) {
+		boolean hasTocBase = tocAddr != null && tocAddr.getOffset() != 0;
+		if (!hasTocBase && !elfLoadHelper.getElfHeader().isRelocatable()) {
 			return null;
 		}
 
@@ -631,6 +632,10 @@ public class PowerPC64_ElfExtension extends ElfExtension {
 
 			// Otherwise, create function at OPD referenced location
 			function = elfLoadHelper.createOneByteFunction(null, refAddr, isGlobal);
+		}
+
+		if (!hasTocBase) {
+			return function.getSymbol();
 		}
 
 		// set r2 to TOC base for each function
