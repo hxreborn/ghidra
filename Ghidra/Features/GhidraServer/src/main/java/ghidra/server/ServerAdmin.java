@@ -515,7 +515,7 @@ public class ServerAdmin implements GhidraLaunchable {
 			"      When PKI authentication is used, add the specified X500 Distinguished Name for a user");
 		System.err.println("  -list [--users]");
 		System.err.println(
-			"      Output list of repositories to the console (user access list will be included with -users)");
+			"      Output list of repositories to the console (user access list will be included with --users)");
 		System.err.println("  -list <sid> [<sid>...]");
 		System.err.println("      Output list of repository permissions for each user specified");
 		System.err.println("  -users");
@@ -525,7 +525,7 @@ public class ServerAdmin implements GhidraLaunchable {
 			"      Migrate the specified repository to the latest file system storage schema (see svrREADME.html)");
 		System.err.println("  -migrate-all");
 		System.err.println(
-			"      Migrate the all repositories to the latest file system storage schema (see svrREADME.html)");
+			"      Migrate all repositories to the latest file system storage schema (see svrREADME.html)");
 		System.err.println();
 	}
 }
