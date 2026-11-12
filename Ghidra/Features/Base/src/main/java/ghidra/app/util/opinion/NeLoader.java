@@ -735,7 +735,7 @@ public class NeLoader extends AbstractOrdinalSupportLoader {
 					farAddr += value;
 				}
 				memory.setInt(address, (int) farAddr);
-				break;
+				return value & 0xffff;
 			}
 			case SegmentRelocation.TYPE_FAR_ADDR_48: {
 				break;
