@@ -118,8 +118,23 @@ public class AARCH64BEAssemblyTest extends AbstractAssemblyTest {
 	}
 
 	@Test
-	public void testAssemble_bfm_x19_x0_0x20_0x1f() {
-		assertOneCompatRestExact("bfm x19,x0,#0x20,#0x1f", "13:7c:60:b3");
+	public void testAssemble_bfi_x19_x0_0x20_0x20() {
+		assertOneCompatRestExact("bfi x19,x0,#0x20,#0x20", "13:7c:60:b3");
+	}
+
+	@Test
+	public void testAssemble_bfi_w16_w9_0x2_0x1e() {
+		assertOneCompatRestExact("bfi w16,w9,#0x2,#0x1e", "30:75:1e:33");
+	}
+
+	@Test
+	public void testAssemble_bfc_w16_0x2_0x1e() {
+		assertOneCompatRestExact("bfc w16,#0x2,#0x1e", "f0:77:1e:33");
+	}
+
+	@Test
+	public void testAssemble_bfc_x16_0x3c_0x4() {
+		assertOneCompatRestExact("bfc x16,#0x3c,#0x4", "f0:0f:44:b3");
 	}
 
 	@Test

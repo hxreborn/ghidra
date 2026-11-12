@@ -774,6 +774,9 @@ is ImmS_LT_ImmR=1 & sf=1 & opc=1 & b_2428=0x13 & b_2323=0 & n=1 & ImmR_bitfield6
 
 BFextractWidth32: "#"^imm is ImmR & ImmS [ imm = ImmS - ImmR + 1; ] { export *[const]:4 imm; }
 BFextractWidth64: "#"^imm is ImmR & ImmS [ imm = ImmS - ImmR + 1; ] { export *[const]:8 imm; }
+bfi_lsb: "#"^imm is ImmR [ imm = 32 - ImmR; ] { export *[const]:4 imm; }
+bfi_lsb64: "#"^imm is ImmR [ imm = 64 - ImmR; ] { export *[const]:4 imm; }
+bfi_width: "#"^imm is ImmS [ imm = ImmS + 1; ] { export *[const]:4 imm; }
 
 # C6.2.31 BFXIL page C6-1199 line 70700 MATCH x33000000/mask=x7f800000
 # C6.2.28 BFC page C6-1193 line 70394 MATCH x330003e0/mask=x7f8003e0
@@ -811,6 +814,50 @@ is ImmS_LT_ImmR=0 & sf=1 & opc=1 & b_2428=0x13 & b_2323=0 & n=1 & ImmRConst64 & 
 	mask:8 = (0xffffffffffffffff >> (64 - BFextractWidth64));
 	tmp:8 = (src >> ImmRConst64) & mask;
 	Rd_GPR64 = ((dst & ~(mask)) | tmp);
+}
+
+:bfc Rd_GPR32, bfi_lsb, bfi_width
+is ImmS_LT_ImmR=1 & Rn=0x1f & sf=0 & opc=1 & b_2428=0x13 & b_2323=0 & n=0 & b_21=0 & b_15=0 & ImmRConst32 & bfi_lsb & bfi_width & Rn_GPR32 & Rd_GPR32 & Rd_GPR64 & DecodeWMask32 & DecodeTMask32
+{
+	local wmask:4 = DecodeWMask32;
+	local tmask:4 = DecodeTMask32;
+	local dst:4 = Rd_GPR32;
+	local src:4 = Rn_GPR32;
+	local bot:4 = (dst & ~(wmask)) | (((src>>ImmRConst32)|(src<<(32-ImmRConst32))) & wmask);
+	Rd_GPR64 = zext((dst & ~(tmask)) | (bot & tmask));
+}
+
+:bfi Rd_GPR32, Rn_GPR32, bfi_lsb, bfi_width
+is ImmS_LT_ImmR=1 & sf=0 & opc=1 & b_2428=0x13 & b_2323=0 & n=0 & b_21=0 & b_15=0 & ImmRConst32 & bfi_lsb & bfi_width & Rn_GPR32 & Rd_GPR32 & Rd_GPR64 & DecodeWMask32 & DecodeTMask32
+{
+	local wmask:4 = DecodeWMask32;
+	local tmask:4 = DecodeTMask32;
+	local dst:4 = Rd_GPR32;
+	local src:4 = Rn_GPR32;
+	local bot:4 = (dst & ~(wmask)) | (((src>>ImmRConst32)|(src<<(32-ImmRConst32))) & wmask);
+	Rd_GPR64 = zext((dst & ~(tmask)) | (bot & tmask));
+}
+
+:bfc Rd_GPR64, bfi_lsb64, bfi_width
+is ImmS_LT_ImmR=1 & ImmS_EQ_ImmR=0 & Rn=0x1f & sf=1 & opc=1 & b_2428=0x13 & b_2323=0 & n=1 & ImmRConst64 & bfi_lsb64 & bfi_width & Rn_GPR64 & Rd_GPR64 & DecodeWMask64 & DecodeTMask64
+{
+	local wmask:8 = DecodeWMask64;
+	local tmask:8 = DecodeTMask64;
+	local dst:8 = Rd_GPR64;
+	local src:8 = Rn_GPR64;
+	local bot:8 = (dst & ~(wmask)) | (((src>>ImmRConst64)|(src<<(64-ImmRConst64))) & wmask);
+	Rd_GPR64 = (dst & ~(tmask)) | (bot & tmask);
+}
+
+:bfi Rd_GPR64, Rn_GPR64, bfi_lsb64, bfi_width
+is ImmS_LT_ImmR=1 & ImmS_EQ_ImmR=0 & sf=1 & opc=1 & b_2428=0x13 & b_2323=0 & n=1 & ImmRConst64 & bfi_lsb64 & bfi_width & Rn_GPR64 & Rd_GPR64 & DecodeWMask64 & DecodeTMask64
+{
+	local wmask:8 = DecodeWMask64;
+	local tmask:8 = DecodeTMask64;
+	local dst:8 = Rd_GPR64;
+	local src:8 = Rn_GPR64;
+	local bot:8 = (dst & ~(wmask)) | (((src>>ImmRConst64)|(src<<(64-ImmRConst64))) & wmask);
+	Rd_GPR64 = (dst & ~(tmask)) | (bot & tmask);
 }
 
 # C6.2.32 BIC (shifted register) page C6-1201 line 70793 MATCH x0a200000/mask=x7f200000
