@@ -173,7 +173,7 @@ public abstract class AbstractProgramLoader implements Loader {
 				.build());
 		list.add(Option.newBoolean(ANCHOR_LABELS_OPTION_NAME)
 				.value(true)
-				.commandLineArgument("-anchorLabels")
+				.commandLineArgument(createArg("-anchorLabels"))
 				.description(
 					"Prevent processor labels from moving on imagebase or memory block change.")
 				.build());

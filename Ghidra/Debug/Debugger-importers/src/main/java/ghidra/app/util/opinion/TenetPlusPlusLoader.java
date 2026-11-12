@@ -254,11 +254,11 @@ public class TenetPlusPlusLoader implements Loader {
 				.commandLineArgument(createArg("-associatedProgram"))
 				.build());
 		list.add(Option.newBoolean(STORE_REGS_AS_ATTRS_OPTION_NAME)
-				.commandLineArgument("-storeRegs")
+				.commandLineArgument(createArg("-storeRegs"))
 				.value(storeRegsAsAttrs)
 				.build());
 		list.add(Option.newBoolean(ADD_ALL_MEM_REFS_OPTION_NAME)
-				.commandLineArgument("-allRefs")
+				.commandLineArgument(createArg("-allRefs"))
 				.value(addAllMemRefs)
 				.build());
 		return list;
