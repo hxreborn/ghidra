@@ -719,6 +719,9 @@ public class NeLoader extends AbstractOrdinalSupportLoader {
 				value = memory.getShort(address) & 0xffff;
 
 				long relocOff = relocAddr.getSegmentOffset();
+				if (reloc.isAdditive()) {
+					relocOff += value;
+				}
 				memory.setByte(address, (byte) (relocOff));
 				memory.setByte(address.addWrap(1), (byte) (relocOff >> 8));
 				break;
