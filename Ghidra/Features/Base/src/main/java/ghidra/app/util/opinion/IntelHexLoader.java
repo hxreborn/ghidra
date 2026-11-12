@@ -26,6 +26,7 @@ import ghidra.program.model.address.*;
 import ghidra.program.model.lang.*;
 import ghidra.program.model.listing.Program;
 import ghidra.program.model.symbol.*;
+import ghidra.util.Msg;
 import ghidra.util.exception.CancelledException;
 import ghidra.util.exception.InvalidInputException;
 import ghidra.util.task.TaskMonitor;
@@ -269,6 +270,15 @@ public class IntelHexLoader extends AbstractProgramLoader {
 				if (defaultAddressSpace != null) {
 					baseAddr = defaultAddressSpace.getAddress(0);
 				}
+			}
+		}
+		else if (loadSpec.getLanguageCompilerSpec() != null) {
+			try {
+				Language language = loadSpec.getLanguageCompilerSpec().getLanguage();
+				baseAddr = language.getAddressFactory().getDefaultAddressSpace().getAddress(0);
+			}
+			catch (LanguageNotFoundException e) {
+				Msg.error(this, "Unable to get the default base address: " + e.getMessage());
 			}
 		}
 
