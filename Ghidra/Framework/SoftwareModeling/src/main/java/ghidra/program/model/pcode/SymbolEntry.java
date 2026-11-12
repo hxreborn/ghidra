@@ -21,6 +21,7 @@ import static ghidra.program.model.pcode.ElementId.*;
 import java.io.IOException;
 
 import ghidra.program.model.address.Address;
+import ghidra.program.model.address.AddressOutOfBoundsException;
 import ghidra.program.model.address.AddressSpace;
 import ghidra.program.model.listing.VariableStorage;
 
@@ -91,7 +92,12 @@ public abstract class SymbolEntry {
 			int rangeel = decoder.openElement(ELEM_RANGE);
 			AddressSpace spc = decoder.readSpace(ATTRIB_SPACE);
 			long offset = decoder.readUnsignedInteger(ATTRIB_FIRST);
-			pcaddr = spc.getAddress(offset);
+			try {
+				pcaddr = spc.getAddress(offset);
+			}
+			catch (AddressOutOfBoundsException e) {
+				pcaddr = null;
+			}
 			decoder.closeElement(rangeel);
 		}
 
