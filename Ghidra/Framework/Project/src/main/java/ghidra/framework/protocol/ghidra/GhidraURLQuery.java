@@ -203,12 +203,12 @@ public class GhidraURLQuery {
 
 				case UNAVAILABLE:
 					generatedErr =
-						new IOException("Server connection error occured (see log files): " +
+						new IOException("Server connection error occurred (see log files): " +
 							getGhidraUrlDetail(ghidraUrl));
 					break;
 
 				default:
-					generatedErr = new IOException("Server connection error occured (" + status +
+					generatedErr = new IOException("Server connection error occurred (" + status +
 						": " + getGhidraUrlDetail(ghidraUrl));
 					break;
 			}

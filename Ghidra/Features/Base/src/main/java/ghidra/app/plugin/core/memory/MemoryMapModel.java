@@ -283,7 +283,7 @@ class MemoryMapModel extends AbstractSortedTableModel<MemoryBlock> implements Pr
 				MemoryBlockType blockType = block.getType();
 				if (blockType == MemoryBlockType.BIT_MAPPED ||
 					blockType == MemoryBlockType.BYTE_MAPPED) {
-					showMessage("Cannot change intialized memory state of a mapped Block");
+					showMessage("Cannot change initialized memory state of a mapped Block");
 					break;
 				}
 				provider.setStatusText("");

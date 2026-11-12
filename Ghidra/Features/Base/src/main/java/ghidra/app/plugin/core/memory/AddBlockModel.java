@@ -299,7 +299,7 @@ class AddBlockModel {
 					length, isRead, isWrite, isExecute, isVolatile, isOverlay);
 			default:
 				throw new AssertException(
-					"Encountered unexpected intialized type: " + initializedType);
+					"Encountered unexpected initialized type: " + initializedType);
 
 		}
 	}

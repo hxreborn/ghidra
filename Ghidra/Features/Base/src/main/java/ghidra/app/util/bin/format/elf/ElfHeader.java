@@ -1332,7 +1332,7 @@ public class ElfHeader implements StructConverter {
 		long maxSymbolIndex = 0;
 		for (long i = 0; i < numBuckets; i++) {
 			if (bucketOffset < gnuHashTableOffset || bucketOffset > maxOffset) {
-				logError("Error occured while inspecting GNU Hash table");
+				logError("Error occurred while inspecting GNU Hash table");
 				return 0;
 			}
 			int symbolIndex = reader.readInt(bucketOffset);
@@ -1348,7 +1348,7 @@ public class ElfHeader implements StructConverter {
 		long chainOffset = bucketOffset + (4 * chainIndex); // chains immediately follow buckets
 		while (true) {
 			if (chainOffset < gnuHashTableOffset || chainOffset > maxOffset) {
-				logError("Error occured while inspecting GNU Hash table");
+				logError("Error occurred while inspecting GNU Hash table");
 				return 0;
 			}
 			int chainValue = reader.readInt(chainOffset);

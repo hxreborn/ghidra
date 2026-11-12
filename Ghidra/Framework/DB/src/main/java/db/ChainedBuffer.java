@@ -345,7 +345,7 @@ public class ChainedBuffer implements Buffer {
 		}
 		if (uninitializedDataSource != null) {
 			throw new UnsupportedOperationException(
-				"Buffer size may not be changed when using unintialized data source");
+				"Buffer size may not be changed when using uninitialized data source");
 		}
 		if (dataBufferIdTable == null) {
 			throw new AssertException("Invalid Buffer");
@@ -671,7 +671,7 @@ public class ChainedBuffer implements Buffer {
 		}
 		if (uninitializedDataSource != null) {
 			throw new UnsupportedOperationException(
-				"Buffer size may not be changed when using unintialized data source");
+				"Buffer size may not be changed when using uninitialized data source");
 		}
 		if (firstBufferId < 0) {
 			throw new AssertException("Invalid Buffer");

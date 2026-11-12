@@ -317,7 +317,7 @@ public class CommandProcessor {
 					try {
 						processCommand(repositoryMgr, cmdStr.trim());
 					} catch (ArrayIndexOutOfBoundsException e) {
-						log.error("Error occured processing command: " + cmdStr);
+						log.error("Error occurred processing command: " + cmdStr);
 					}
 				}
 				file.delete();

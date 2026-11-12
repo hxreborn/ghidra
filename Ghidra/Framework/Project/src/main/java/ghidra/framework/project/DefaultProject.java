@@ -278,10 +278,10 @@ public class DefaultProject implements Project {
 				throw new IOException("Access denied by Server Allow List");
 
 			case UNAVAILABLE:
-				throw new IOException("Server connection error occured (see log files)");
+				throw new IOException("Server connection error occurred (see log files)");
 
 			default:
-				throw new IOException("Server connection error occured: " + responseCode);
+				throw new IOException("Server connection error occurred: " + responseCode);
 
 		}
 
