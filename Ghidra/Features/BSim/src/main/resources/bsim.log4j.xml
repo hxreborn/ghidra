@@ -9,8 +9,15 @@
 -->
 <Configuration monitorInterval="30" xmlns:xi="http://www.w3.org/2001/XInclude" packages="log"> 
 	<Appenders>
-		<xi:include href="log4j-appender-console.xml"/>
-		<xi:include href="log4j-appender-rolling-file-default.xml"/>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%-5p %m (%c{1}) %ex %n"/>
+		</Console>
+		<Console name="detail" target="SYSTEM_OUT">
+			<PatternLayout pattern="%-5p %m (%c{1}) %ex %n"/>
+		</Console>
+		<Console name="script" target="SYSTEM_OUT">
+			<PatternLayout pattern="%-5p %m (%c{1}) %ex %n"/>
+		</Console>
 	</Appenders>
 	
 	<Loggers>    
@@ -23,6 +30,7 @@
 		<Root level="ALL">
 			<AppenderRef ref="console" level="WARN"/>      
 			<AppenderRef ref="detail" level="DEBUG"/> 
+			<AppenderRef ref="script" level="DEBUG"/> 
 		</Root> 
 		
 		<Logger name="ghidra.features.bsim.query.ingest" level="INFO" additivity="false">
