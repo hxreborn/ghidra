@@ -729,8 +729,7 @@ The Ghidra log file(s) may be examined for feedback on queued command execution 
 
 The general command usage is:
 ```bash
-svrAdmin [<server-root-path>]
-         [-add <user_id> [--p]]
+svrAdmin [-add <user_id> [--p]]
          [-grant <user_id> <"+r"|"+w"|"+a"> <repository_name>] 
          [-revoke <user_id> <repository_name>] 
          [-remove <user_id>] 
@@ -743,10 +742,9 @@ svrAdmin [<server-root-path>]
          [-migrate "<repository_name>"]
 ```
 
-#### `<server-root-path>`
-There is normally no need to specify this argument on the command line.The default server-root-path 
-is determined by the _server.conf_ setting of the `ghidra.repositories.dir` variable.  This allows 
-both the server execution and _svrAdmin_ script to utilize the same setting.
+The server directory is not passed on the command line.  The _svrAdmin_ script reads it from the 
+`ghidra.repositories.dir` variable in _server.conf_, so the server execution and _svrAdmin_ use 
+the same setting.
 
 #### `-add` (Adding a User)
 All authentication modes require that a user first be added to the server for a connection to be 
