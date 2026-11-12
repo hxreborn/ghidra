@@ -36,7 +36,7 @@ public class AssembleBlockScript extends GhidraScript {
 		// newline-separated instructions.
 		// This will patch each resulting instruction into the bound program in sequence.
 		asm.assemble(currentAddress, //
-			"ADD [RBX],BL", //
+			"ADD byte ptr [RBX],BL", //
 			"JMP 0x34", //
 			"SCASB.REPE RDI");
 	}
