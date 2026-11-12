@@ -336,7 +336,7 @@ linked to:
 
 ## Upgrading
 GhidraDev is upgraded differently depending on how it was installed.  If GhidraDev was
-[manually installed in Eclipse](#manual-installation-in-eclipse), it can be upgraded the same was it
+[manually installed in Eclipse](#installing), it can be upgraded the same way it
 was installed.
 
 If GhidraDev was [automatically installed through Ghidra](#automatic-installation-through-ghidra), 
@@ -345,7 +345,7 @@ following one of the two techniques described in the [Installing](#installing) s
 
 ## Uninstalling
 GhidraDev is uninstalled differently depending on how it was installed. If GhidraDev was
-[manually installed in Eclipse](#manual-installation-in-eclipse), it can be uninstalled as follows
+[manually installed in Eclipse](#installing), it can be uninstalled as follows
 from Eclipse:
 1. Click `Help -> About Eclipse`
     * For macOS: `Eclipse -> About Eclipse`
