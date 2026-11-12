@@ -111,11 +111,13 @@ public:
 /// if a particular lane scheme makes sense in terms of the function's data-flow, and then
 /// rewrites the data-flow so that the lanes become explicit Varnodes.
 class ActionLaneDivide : public Action {
+  bool registersProcessed;
   static void addPieceLaneSize(int4 size,int4 offset,const LanedRegister &allowedLanes,LanedRegister &checkLanes);
   void collectLaneSizes(Varnode *vn,const LanedRegister &allowedLanes,LanedRegister &checkLanes);
   bool processVarnode(Funcdata &data,Varnode *vn,const LanedRegister &lanedRegister,int4 mode);
 public:
-  ActionLaneDivide(const string &g) : Action(0,"lanedivide",g) {}	///< Constructor
+  ActionLaneDivide(const string &g) : Action(0,"lanedivide",g) { registersProcessed = false; }	///< Constructor
+  virtual void reset(Funcdata &data) { registersProcessed = false; }
   virtual Action *clone(const ActionGroupList &grouplist) const {
     if (!grouplist.contains(getGroup())) return (Action *)0;
     return new ActionLaneDivide(getGroup());

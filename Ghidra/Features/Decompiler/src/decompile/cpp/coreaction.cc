@@ -627,6 +627,8 @@ int4 ActionLaneDivide::apply(Funcdata &data)
   for(int4 mode=0;mode<3;++mode) {
     bool allStorageProcessed = true;
     for(iter=data.beginLaneAccess();iter!=data.endLaneAccess();++iter) {
+      if (registersProcessed && (*iter).first.space->getType() == IPTR_PROCESSOR)
+	continue;
       const LanedRegister *lanedReg = (*iter).second;
       Address addr = (*iter).first.getAddr();
       int4 sz = (*iter).first.size;
@@ -654,6 +656,7 @@ int4 ActionLaneDivide::apply(Funcdata &data)
     }
     if (allStorageProcessed) break;
   }
+  registersProcessed = true;
   data.clearLanedAccessMap();
   return 0;
 }
